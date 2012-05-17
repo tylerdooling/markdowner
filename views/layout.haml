@@ -1,16 +1,35 @@
 %html
   %head
     %link{:rel => 'stylesheet', :href => '/css/bootstrap.css'}
-    %link{:rel => 'stylesheet', :href => '/css/bootstrap-responsive.css'}
+    %link{:rel => 'stylesheet', :href => 'http://yandex.st/highlightjs/6.2/styles/default.min.css'}
     %link{:rel => 'stylesheet', :href => '/css/app.css'}
 
-  %body{:style => 'padding-top:60px;padding-bottom:60px'}
+  %body{:style => 'padding-top:60px'}
     .navbar.navbar-fixed-top
       .navbar-inner
         .container-fluid
           %a.brand
-            Markdown Editor
+            Markdowner
           .navbar-text.pull-right
-            ="Version 0.0.1"
+            ="version 0.0.1"
 
     = yield
+
+    .navbar.navbar-fixed-bottom
+      .navbar-inner
+        .container-fluid
+          .navbar-text.pull-left
+            by
+            %a{:href => 'http://www.tylerdooling.com'}
+              tylerdooling.com
+
+          .navbar-text.pull-right
+            Thanks to
+            %a{:href => 'https://github.com/ajaxorg/ace'}
+              Ace,
+            %a{:href => 'https://github.com/coreyti/showdown'}
+              Showdown,
+            %a{:href => 'http://softwaremaniacs.org/soft/highlight/en/'}
+              Highlight.js
+            %a{:href => 'http://twitter.github.com/bootstrap/'}
+              and Twitter Bootstrap

@@ -1,24 +1,42 @@
-#wrapper
-  .container-fluid
-    .row-fluid
-      .span6
-        #editor some text
-      .span6
-        #document
-          %div
+.container-fluid
+  .row
+    .span2.offset10
+
+  .row-fluid
+    .span6
+      #copy_raw
+    .span6
+      #copy_html
+  .row-fluid
+    .span6
+      #editor= "Get Started!"
+    .span6
+      #document
+        %div
 
 %script{:charset => "utf-8", :src => "http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js", :type => "text/javascript"}
 %script{:charset => "utf-8", :src => "/js/showdown.js", :type => "text/javascript"}
 %script{:charset => "utf-8", :src => "/js/ace.js", :type => "text/javascript"}
 %script{:charset => "utf-8", :src => "/js/keybinding-vim.js", :type => "text/javascript"}
 %script{:charset => "utf-8", :src => "/js/mode-markdown.js", :type => "text/javascript"}
+%script{:charset => "utf-8", :src => "http://yandex.st/highlightjs/6.2/highlight.min.js", :type => "text/javascript"}
 
 :javascript
+
+  function buildClipper(text){
+    res = ['<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="110" height="14" id="clippy" > <param name="movie" value="/flash/clippy.swf"/> <param name="allowScriptAccess" value="always" /> <param name="quality" value="high" /> <param name="scale" value="noscale" />',
+      '<param NAME="FlashVars" value="text=' + text + '">',
+      '<param name="bgcolor" value="#595959"> <embed src="/flash/clippy.swf" width="110" height="14" name="clippy" quality="high" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer"',
+             'FlashVars="text=' + text + '"',
+             'bgcolor="#595959" /> </object>'].join(' ');
+    return res;
+  }
+
   $(document).ready(function(){
     var editor = ace.edit("editor");
+
     var markdownMode = require("ace/mode/markdown").Mode;
     editor.getSession().setMode(new markdownMode());
-
     editor.setTheme("ace/theme/twilight");
 
     var callback = function(){
@@ -28,11 +46,19 @@
       $("#document div").html(html)
       $("#document div").val(html.replace(/>/g, ">\n").replace(/</g, "\n<").replace(/\n{2,}/g, "\n\n"));
 
-      $('#editor').height($('#document').height() + 40);
+      $('pre code').each(function(i, e) {
+        var parsed = hljs.highlightAuto(e.innerHTML);
+        e.innerHTML = parsed.value;
+      });
+
+      $('#editor').height($('#document').height());
       editor.resize();
+
+      $('#copy_raw').html(buildClipper(txt));
+      $('#copy_html').html(buildClipper(html));
+      //#$('#clippy').find('param[name="FlashVars"]').val(txt);
+      //#$('#clippy').find('embed').attr('FlashVars', txt);
     }
-
-
 
     editor.getSession().on('change', callback);
   });
