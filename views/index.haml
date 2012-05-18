@@ -24,6 +24,7 @@
 :javascript
 
   function buildClipper(text){
+    text = encodeURI(text);
     res = ['<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="110" height="14" id="clippy" > <param name="movie" value="/flash/clippy.swf"/> <param name="allowScriptAccess" value="always" /> <param name="quality" value="high" /> <param name="scale" value="noscale" />',
       '<param NAME="FlashVars" value="text=' + text + '">',
       '<param name="bgcolor" value="#595959"> <embed src="/flash/clippy.swf" width="110" height="14" name="clippy" quality="high" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer"',
@@ -34,6 +35,7 @@
 
   $(document).ready(function(){
     var editor = ace.edit("editor");
+    var clip;
 
     var markdownMode = require("ace/mode/markdown").Mode;
     editor.getSession().setMode(new markdownMode());
@@ -54,10 +56,8 @@
       $('#editor').height($('#document').height());
       editor.resize();
 
-      $('#copy_raw').html(buildClipper(txt));
-      $('#copy_html').html(buildClipper(html));
-      //#$('#clippy').find('param[name="FlashVars"]').val(txt);
-      //#$('#clippy').find('embed').attr('FlashVars', txt);
+      clearTimeout(clip);
+      clip = setTimeout(function(){ $('#copy_raw').html(buildClipper(txt)); $('#copy_html').html(buildClipper(html)); }, 1000);
     }
 
     editor.getSession().on('change', callback);
